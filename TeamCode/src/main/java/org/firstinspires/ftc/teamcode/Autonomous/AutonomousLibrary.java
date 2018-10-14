@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Common.CommonLibrary;
 import org.firstinspires.ftc.teamcode.Common.RobotHardware;
 
@@ -47,6 +48,25 @@ public class AutonomousLibrary {
         rh.frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rh.backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rh.backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+    public void encoderTicksToInchesTest (Telemetry telemetry, LinearOpMode caller) {
+
+        long startTime = System.currentTimeMillis();
+        while(caller.opModeIsActive() && !caller.isStopRequested()) {
+            long currentTime = System.currentTimeMillis();
+            double timeChange = (currentTime - startTime);
+            if (timeChange <= 1000) {
+                rh.frontRightMotor.setPower(1);
+                rh.backLeftMotor.setPower(1);
+                rh.backRightMotor.setPower(1);
+
+                int currentEncoderTicks = rh.frontRightMotor.getCurrentPosition();
+                telemetry.addData("Current ticks", currentEncoderTicks);
+                telemetry.update();
+            }
+            else {break;}
+        }
     }
 
 }
