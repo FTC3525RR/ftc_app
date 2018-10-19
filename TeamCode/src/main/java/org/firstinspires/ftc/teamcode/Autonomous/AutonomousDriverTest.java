@@ -6,23 +6,22 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Common.CommonLibrary;
 import org.firstinspires.ftc.teamcode.Common.RobotHardware;
-
 @Autonomous (name = "Auto Driver test")
 
 public class AutonomousDriverTest extends LinearOpMode {
 
-    @Override
     public void runOpMode(){
 
+        AutonomousLibrary al = new AutonomousLibrary();
         RobotHardware rh = new RobotHardware();
         CommonLibrary cl = new CommonLibrary();
-        AutonomousLibrary al = new AutonomousLibrary();
-        rh.init(hardwareMap);
+        rh.init(hardwareMap, telemetry);
         waitForStart();
 
         while (opModeIsActive()){
 
-            al.encoderTicksToInchesTest(telemetry, this);
+            //al.encoderTicksToInchesTest(telemetry, this);
+            al.turnOnWheels();
 
         }
 

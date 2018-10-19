@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
@@ -12,12 +13,14 @@ import org.firstinspires.ftc.teamcode.Common.RobotHardware;
 
 public class AutonomousLibrary {
 
-    RobotHardware rh;
+    RobotHardware robot = new RobotHardware();
+    HardwareMap hardwareMap;
     CommonLibrary cl;
 
-    public void driveAuto(LinearOpMode caller, double angle, double distace) {
 
-        resetMotorEncoders(caller);
+    public void driveAuto(double angle, double distance) {
+
+                resetMotorEncoders();
 
         double driveAngle = angle * Math.PI / 180;
 
@@ -35,38 +38,54 @@ public class AutonomousLibrary {
 
         //Put target stuff here, don't run until that happens. Delete comment when done.
 
-        rh.frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rh.frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rh.backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rh.backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
     }
 
-    public void resetMotorEncoders(LinearOpMode caller){
+    public void resetMotorEncoders(){
 
-        rh.frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rh.frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rh.backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rh.backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     public void encoderTicksToInchesTest (Telemetry telemetry, LinearOpMode caller) {
 
+        //frontRightMotor = robot.frontRightMotor;
         long startTime = System.currentTimeMillis();
         while(caller.opModeIsActive() && !caller.isStopRequested()) {
             long currentTime = System.currentTimeMillis();
             double timeChange = (currentTime - startTime);
             if (timeChange <= 1000) {
-                rh.frontRightMotor.setPower(1);
+                robot.frontRightMotor.getCurrentPosition();
+                /*rh.frontRightMotor.setPower(1);
                 rh.backLeftMotor.setPower(1);
                 rh.backRightMotor.setPower(1);
 
-                int currentEncoderTicks = rh.frontRightMotor.getCurrentPosition();
-                telemetry.addData("Current ticks", currentEncoderTicks);
+                int tickTock;
+                tickTock = rh.frontRightMotor.getCurrentPosition();
+                telemetry.addData("Current ticks:", tickTock);*/
+                telemetry.addData("The time has changed", timeChange);
                 telemetry.update();
             }
             else {break;}
         }
+
+        robot.frontRightMotor.setPower(0);
+        robot.backLeftMotor.setPower(0);
+        robot.backRightMotor.setPower(0);
+    }
+
+    public void turnOnWheels(){
+
+        robot.frontRightMotor.setPower(1);
+        robot.backRightMotor.setPower(1);
+        robot.backLeftMotor.setPower(1);
     }
 
 }
