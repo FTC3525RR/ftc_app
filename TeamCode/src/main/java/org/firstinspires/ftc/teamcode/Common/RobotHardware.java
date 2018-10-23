@@ -12,10 +12,12 @@ public class RobotHardware {
 
         HardwareMap hardwareMap;
         CommonLibrary cl;
-        public DcMotor frontLeftMotor;
-        public DcMotor backRightMotor;
-        public DcMotor frontRightMotor;
-        public DcMotor backLeftMotor;
+        public DcMotor frontLeftMotor = null;
+        public DcMotor backRightMotor = null;
+        public DcMotor frontRightMotor = null;
+        public DcMotor backLeftMotor = null;
+        public DcMotor liftMotor = null;
+
 
         public void init(HardwareMap hwMap, Telemetry telemetry){
 
@@ -25,20 +27,25 @@ public class RobotHardware {
             frontLeftMotor = hardwareMap.dcMotor.get("front left motor");
             backLeftMotor = hardwareMap.dcMotor.get("back left motor");
             backRightMotor = hardwareMap.dcMotor.get("back right motor");
+            liftMotor = hardwareMap.dcMotor.get("RLM");
+
 
             frontRightMotor.setPower(0);
             frontLeftMotor.setPower(0);
             backLeftMotor.setPower(0);
             backRightMotor.setPower(0);
+            liftMotor.setPower(0);
 
             frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
             backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
             frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
             backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
             frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         }
 }
