@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.Common.RobotHardware;
 
 public class TeleopLibrary {
 
-    RobotHardware robot;
+    RobotHardware robot = new RobotHardware();
 
     public void drivingMotorPowers(Gamepad Gamepad1) {
 
@@ -20,7 +20,7 @@ public class TeleopLibrary {
 
     }
 
-    public void scaleInput(double input, LinearOpMode caller, Gamepad gamepad1) {
+    public void liftMotor(LinearOpMode caller, Gamepad gamepad1) {
 
         while (caller.opModeIsActive()) {
             robot.liftMotor.setDirection(DcMotor.Direction.FORWARD);

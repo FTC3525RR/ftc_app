@@ -86,6 +86,7 @@ public class AutonomousLibrary {
         robot.frontRightMotor.setPower(1);
         robot.backRightMotor.setPower(1);
         robot.backLeftMotor.setPower(1);
+        robot.frontLeftMotor.setPower(1);
     }
 
 }

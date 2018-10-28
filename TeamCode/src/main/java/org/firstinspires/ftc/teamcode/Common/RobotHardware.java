@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Common.CommonLibrary;
 
 public class RobotHardware {
 
@@ -23,29 +22,38 @@ public class RobotHardware {
 
             hardwareMap = hwMap;
             frontRightMotor = hardwareMap.dcMotor.get("front right motor");
-            if(frontRightMotor == hardwareMap.dcMotor.get("front right motor")){telemetry.addData("Motor isn't null?", frontRightMotor.getPortNumber());}
+            if(frontRightMotor == hardwareMap.dcMotor.get("front right motor")) {
+                telemetry.addData("Motor isn't null?", frontRightMotor.getPortNumber());
+            }
             frontLeftMotor = hardwareMap.dcMotor.get("front left motor");
             backLeftMotor = hardwareMap.dcMotor.get("back left motor");
             backRightMotor = hardwareMap.dcMotor.get("back right motor");
-            liftMotor = hardwareMap.dcMotor.get("RLM");
+            //liftMotor = hardwareMap.dcMotor.get("RLM");
+
+            telemetry.addData("","Ready to start");
+            telemetry.update();
+
+        }
+
+        public void runMethod(){
+
 
 
             frontRightMotor.setPower(0);
             frontLeftMotor.setPower(0);
             backLeftMotor.setPower(0);
             backRightMotor.setPower(0);
-            liftMotor.setPower(0);
+            //liftMotor.setPower(0);
 
             frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
             backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
             frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
             backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-            liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+            //liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
             frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+            //liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 }
