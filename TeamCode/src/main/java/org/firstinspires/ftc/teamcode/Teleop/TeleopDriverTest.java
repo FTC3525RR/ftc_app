@@ -97,16 +97,15 @@ public class TeleopDriverTest extends OpMode {
             rh.liftMotor.setDirection(DcMotor.Direction.FORWARD);
 
             if (gamepad1.dpad_up) {
-                if (rh.liftMotor.getCurrentPosition() < 100) {
+                if (rh.liftMotor.getCurrentPosition() < 1000) {
                     rh.liftMotor.setPower(1);
                 }
-                else {rh.liftMotor.setPower(0.0);}
+                else {rh.liftMotor.setPower(0);}
             } else if (gamepad1.dpad_down) {
-                if (rh.liftMotor.getCurrentPosition() > -100) {
-                    rh.liftMotor.setDirection(DcMotor.Direction.REVERSE);
-                    rh.liftMotor.setPower(1);
+                if (rh.liftMotor.getCurrentPosition() >= 0) {
+                    rh.liftMotor.setPower(-1);
                 }
-                else {rh.liftMotor.setPower(0.0);}
+                else {rh.liftMotor.setPower(0);}
             }
             else {rh.liftMotor.setPower(0);}
         }
