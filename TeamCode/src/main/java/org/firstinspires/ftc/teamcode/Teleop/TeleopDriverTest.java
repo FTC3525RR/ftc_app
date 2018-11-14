@@ -15,10 +15,10 @@ import org.firstinspires.ftc.teamcode.Common.RobotHardware;
 public class TeleopDriverTest extends OpMode {
 
     RobotHardware rh = new RobotHardware();
-    double frontLeftPower;
-    double frontRightPower;
-    double backRightPower;
-    double backLeftPower;
+    double flbrPower;
+    double frblPower;
+    /*double backRightPower;
+    double backLeftPower;*/
     public double clockwiseRotation = 0;
     public double counterclockwiseRotation = 0;
 
@@ -52,6 +52,8 @@ public class TeleopDriverTest extends OpMode {
     public void loop() {
 
         drivingMotorPowers(gamepad1);
+        raiseLift(gamepad1);
+        lowerLift(gamepad1);
 
     }
 
@@ -68,19 +70,19 @@ public class TeleopDriverTest extends OpMode {
         rightJoystickToRotation(gamepad1);
         leftJoystickToMotorPower(gamepad1);
 
-        rh.frontLeftMotor.setPower(Range.clip((clockwiseRotation + frontLeftPower) * Math.abs((clockwiseRotation + frontLeftPower)), -1, 1));
-        rh.frontRightMotor.setPower(Range.clip((counterclockwiseRotation + frontRightPower) * Math.abs((counterclockwiseRotation + frontRightPower)), -1, 1));
-        rh.backRightMotor.setPower(Range.clip((counterclockwiseRotation + backRightPower) * Math.abs((counterclockwiseRotation + backRightPower)), -1, 1));
-        rh.backLeftMotor.setPower(Range.clip((clockwiseRotation + backLeftPower) * Math.abs((clockwiseRotation + backLeftPower)), -1, 1));
+        rh.frontLeftMotor.setPower(-(Range.clip((clockwiseRotation + flbrPower) * Math.abs((clockwiseRotation + flbrPower)), -1, 1)));
+        rh.frontRightMotor.setPower(-(Range.clip((counterclockwiseRotation + frblPower) * Math.abs((counterclockwiseRotation + frblPower)), -1, 1)));
+        rh.backRightMotor.setPower(-(Range.clip((counterclockwiseRotation + flbrPower) * Math.abs((counterclockwiseRotation + flbrPower)), -1, 1)));
+        rh.backLeftMotor.setPower(-(Range.clip((clockwiseRotation + frblPower) * Math.abs((clockwiseRotation + frblPower)), -1, 1)));
     }
 
     public void leftJoystickToMotorPower(Gamepad gamepad1) {
 
         double yValue = gamepad1.left_stick_y;
-        frontLeftPower = scaleInput(Range.clip((yValue + gamepad1.right_stick_x), -1, 1));
-        frontRightPower = scaleInput(Range.clip((yValue - gamepad1.right_stick_x), -1, 1));
-        backRightPower = scaleInput(Range.clip((yValue + gamepad1.right_stick_x), -1, 1));
-        backLeftPower = scaleInput(Range.clip((yValue - gamepad1.right_stick_x), -1, 1));
+        flbrPower = scaleInput(Range.clip((yValue + gamepad1.right_stick_x), -1, 1));
+        frblPower = scaleInput(Range.clip((yValue - gamepad1.right_stick_x), -1, 1));
+        /*backRightPower = scaleInput(Range.clip((yValue + gamepad1.right_stick_x), -1, 1));
+        backLeftPower = scaleInput(Range.clip((yValue - gamepad1.right_stick_x), -1, 1));*/
 
     }
 
@@ -136,5 +138,43 @@ public class TeleopDriverTest extends OpMode {
         }
 
         return dScale;
+    }
+
+    public void lowerLift(Gamepad gamepad1){
+
+        rh.liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+       try {
+           while (gamepad1.a) {
+               rh.liftMotor.setPower(-1);
+            /*if (rh.liftMotor.getCurrentPosition() >= 20000){
+                rh.liftMotor.setPower(0);
+            }*/
+           }
+
+       }catch (Exception e) {
+           rh.liftMotor.setPower(0);
+       }
+
+
+        rh.liftMotor.setPower(0);
+    }
+
+    public void raiseLift(Gamepad gamepad1) {
+
+        try {
+            rh.liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            while (gamepad1.b) {
+                rh.liftMotor.setPower(1);
+
+                if (!rh.liftMotorTouchSensor.getState() == true) {
+                    rh.liftMotor.setPower(0);
+                    rh.liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                }
+            }
+            rh.liftMotor.setPower(0);
+
+        }catch (Exception e) {
+            rh.liftMotor.setPower(0);
+        }
     }
 }
