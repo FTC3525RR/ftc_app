@@ -15,8 +15,10 @@ import org.firstinspires.ftc.teamcode.Common.RobotHardware;
 public class TeleopDriverTest extends OpMode {
 
     RobotHardware rh = new RobotHardware();
-    double flbrPower;
-    double frblPower;
+    double frPower;
+    double flPower;
+    double brPower;
+    double blPower;
     /*double backRightPower;
     double backLeftPower;*/
     public double clockwiseRotation = 0;
@@ -29,6 +31,7 @@ public class TeleopDriverTest extends OpMode {
          */
 
         rh.init(hardwareMap, telemetry);
+        rh.runMethod();
     }
 
     /*
@@ -70,25 +73,25 @@ public class TeleopDriverTest extends OpMode {
         rightJoystickToRotation(gamepad1);
         leftJoystickToMotorPower(gamepad1);
 
-        rh.frontLeftMotor.setPower(-(Range.clip((clockwiseRotation + flbrPower) * Math.abs((clockwiseRotation + flbrPower)), -1, 1)));
-        rh.frontRightMotor.setPower(-(Range.clip((counterclockwiseRotation + frblPower) * Math.abs((counterclockwiseRotation + frblPower)), -1, 1)));
-        rh.backRightMotor.setPower(-(Range.clip((counterclockwiseRotation + flbrPower) * Math.abs((counterclockwiseRotation + flbrPower)), -1, 1)));
-        rh.backLeftMotor.setPower(-(Range.clip((clockwiseRotation + frblPower) * Math.abs((clockwiseRotation + frblPower)), -1, 1)));
+        rh.frontLeftMotor.setPower(-(Range.clip((clockwiseRotation + flPower) * Math.abs((clockwiseRotation + flPower)), -1, 1)));
+        rh.frontRightMotor.setPower(-(Range.clip((counterclockwiseRotation + frPower) * Math.abs((counterclockwiseRotation + frPower)), -1, 1)));
+        rh.backRightMotor.setPower(-(Range.clip((counterclockwiseRotation + brPower) * Math.abs((counterclockwiseRotation + brPower)), -1, 1)));
+        rh.backLeftMotor.setPower(-(Range.clip((clockwiseRotation + flPower) * Math.abs((clockwiseRotation + blPower)), -1, 1)));
     }
 
     public void leftJoystickToMotorPower(Gamepad gamepad1) {
 
         double yValue = gamepad1.left_stick_y;
-        flbrPower = scaleInput(Range.clip((yValue + gamepad1.right_stick_x), -1, 1));
-        frblPower = scaleInput(Range.clip((yValue - gamepad1.right_stick_x), -1, 1));
-        /*backRightPower = scaleInput(Range.clip((yValue + gamepad1.right_stick_x), -1, 1));
-        backLeftPower = scaleInput(Range.clip((yValue - gamepad1.right_stick_x), -1, 1));*/
+        frPower = scaleInput(Range.clip((yValue + gamepad1.left_stick_x), -1, 1));
+        flPower = scaleInput(Range.clip((yValue - gamepad1.left_stick_x), -1, 1));
+        brPower = scaleInput(Range.clip((yValue + gamepad1.left_stick_x), -1, 1));
+        blPower = scaleInput(Range.clip((yValue - gamepad1.left_stick_x), -1, 1));
 
     }
 
     public void rightJoystickToRotation (Gamepad gamepad1){
 
-        float HorizontalInput = Range.clip(gamepad1.left_stick_x, -1, 1);
+        float HorizontalInput = Range.clip(gamepad1.right_stick_x, -1, 1);
         clockwiseRotation = scaleInput(HorizontalInput);
         counterclockwiseRotation = scaleInput(-HorizontalInput);
     }
@@ -163,7 +166,7 @@ public class TeleopDriverTest extends OpMode {
 
         try {
             rh.liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            while (gamepad1.b) {
+            while (gamepad1.b && !gamepad1.a) {
                 rh.liftMotor.setPower(1);
 
                 if (!rh.liftMotorTouchSensor.getState() == true) {

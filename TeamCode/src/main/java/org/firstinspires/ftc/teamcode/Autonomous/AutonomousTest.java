@@ -1,18 +1,20 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Common.RobotHardware;
 
-@Autonomous (name = "Auto Driver test")
+@Autonomous (name= "Auto test")
 
-public class AutonomousDriverTest extends LinearOpMode {
+public class AutonomousTest extends LinearOpMode{
     RobotHardware rh;
+    Orientation angles;
+    Orientation startAngles;
 
     public void runOpMode(){
 
@@ -28,9 +30,13 @@ public class AutonomousDriverTest extends LinearOpMode {
         while(opModeIsActive()){
             //turnOnWheels();
             //encoderTicksToInchesTest(telemetry);
-            resetlift();
-           liftDown(telemetry);
+            //resetlift();
+            //liftDown(telemetry);
 //            turnOnLift();
+            //testSensor(telemetry);
+            //dropMarker();
+            turnRelativeToStart(45, telemetry);
+            if (isStopRequested()){break;}
             break;
         }
 
@@ -119,6 +125,19 @@ public class AutonomousDriverTest extends LinearOpMode {
         rh.backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rh.backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
+    public void runWithoutEncoders(){
+
+        rh.frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rh.frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rh.backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rh.backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+    public void runWithEncoder(){
+        rh.frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rh.frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rh.backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rh.backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
 
     public void liftDown(Telemetry telemetry){
 
@@ -162,5 +181,77 @@ public class AutonomousDriverTest extends LinearOpMode {
     public void turnOnLift(){
 
         rh.liftMotor.setPower(1);
+    }
+    public void testSensor(Telemetry telemetry){
+
+        telemetry.addData("True or false?",rh.liftMotorTouchSensor.getState());
+        telemetry.update();
+    }
+    public void dropMarker(){
+        rh.markerServo.setPosition(1);
+    }
+    public void turnRelativeToStart(int angle, Telemetry telemetry) {
+
+        runWithoutEncoders();
+        if (angle >= 360) {
+            angle = angle - 360;
+        }
+        if (angle <= -360) {
+            angle = angle + 360;
+        }
+        double targetAngle = startAngles.firstAngle + angle;
+        if (targetAngle >= 360) {
+            targetAngle = targetAngle - 360;
+        }
+        if (targetAngle <= -360) {
+            targetAngle = targetAngle + 360;
+        }
+        double acceptableError = 0.5;
+        double currentError = 1;
+        double power;
+        while (Math.abs(currentError) > acceptableError && !isStopRequested()) {
+
+            angles = rh.imu.getAngularOrientation();
+            double currentAngle = angles.firstAngle;
+            currentError = targetAngle - currentAngle;
+            telemetry.addData("Current angle", currentAngle);
+            if (currentError > 180) {
+                currentError = currentError - 360;
+            }
+            if (currentError <= -180) {
+                currentError = currentError + 360;
+            }
+            telemetry.addLine();
+            telemetry.addData("Current error", currentError);
+            power = currentError * 0.01;
+            if (power > 0.75) {
+                power = 0.75;
+            }
+            if (power < 0.17 && power > 0) {
+                power = 0.17;
+            }
+            if (power > -0.17 && power < 0) {
+                power = -0.17;
+            }
+            if (power < -0.75) {
+                power = -0.75;
+            }
+            telemetry.addLine();
+            telemetry.addData("Power", power);
+            telemetry.update();
+            rh.frontLeftMotor.setPower(-power);
+            rh.frontRightMotor.setPower(power);
+            rh.backRightMotor.setPower(power);
+            rh.backLeftMotor.setPower(-power);
+            if (isStopRequested()) {
+                break;
+            }
+        }
+        rh.frontLeftMotor.setPower(0);
+        rh.frontRightMotor.setPower(0);
+        rh.backRightMotor.setPower(0);
+        rh.backLeftMotor.setPower(0);
+        telemetry.addData("done", "done");
+        telemetry.update();
     }
 }
